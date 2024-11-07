@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,22 +16,43 @@ import java.util.Objects;
 @EnableAutoConfiguration
 @RestController
 public class Main {
+    private static List<Customer> customers;
+
+    static {
+        customers = new ArrayList<>();
+
+        Customer alex = new Customer(
+                1,
+                "Alex",
+                "topg@tate.com",
+                21
+        );
+        customers.add(alex);
+
+        Customer bang = new Customer(
+                1,
+                "bang",
+                "bang@tate.com",
+                22
+        );
+        customers.add(alex);
+    }
 
     public static void main(String[] args){
         SpringApplication.run(Main.class, args);
     }
 
-    class Customer {
+    static class Customer {
         private Integer id;
         private String name;
         private String email;
-        private String age;
+        private Integer age;
 
         public Customer(){
 
         }
 
-        public Customer(Integer id, String name, String email, String age) {
+        public Customer(Integer id, String name, String email, Integer age) {
             this.id = id;
             this.name = name;
             this.email = email;
@@ -61,11 +83,11 @@ public class Main {
             this.email = email;
         }
 
-        public String getAge() {
+        public Integer getAge() {
             return age;
         }
 
-        public void setAge(String age) {
+        public void setAge(Integer age) {
             this.age = age;
         }
 
