@@ -2,6 +2,7 @@ package com.lysero;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,8 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 //@SpringBootApplication
-@ComponentScan(basePackages = "com.lysero")
-@EnableAutoConfiguration
+@SpringBootApplication
 @RestController
 public class Main {
     private static List<Customer> customers;
@@ -30,17 +30,22 @@ public class Main {
         customers.add(alex);
 
         Customer bang = new Customer(
-                1,
+                2,
                 "bang",
                 "bang@tate.com",
                 22
         );
-        customers.add(alex);
+        customers.add(bang);
     }
 
     public static void main(String[] args){
         SpringApplication.run(Main.class, args);
     }
+
+    @GetMapping("api/v1/customers")
+    public List<Customer> getCustomers(){
+        return customers;
+    };
 
     static class Customer {
         private Integer id;
