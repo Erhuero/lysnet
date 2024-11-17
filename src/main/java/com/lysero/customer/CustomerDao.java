@@ -3,7 +3,7 @@ package com.lysero.customer;
 import java.util.List;
 import java.util.Optional;
 
-public interface CustomerDao {
+public interface  CustomerDao {
 
     List<Customer> selectAllCustomers();
     Optional<Customer> selectCustomerById(Integer id);
