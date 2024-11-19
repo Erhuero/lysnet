@@ -1,8 +1,8 @@
 package com.lysero.customer;
 
-import com.lysero.exception.ResourceNotFound;
+import com.lysero.exception.DuplicateResourceException;
+import com.lysero.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -20,8 +20,19 @@ public class CustomerService {
     }
 
     public Customer getCustomer(Integer id){
-        return customerDao.selectCustomerById(id).orElseThrow(() -> new ResourceNotFound(
+        return customerDao.selectCustomerById(id).orElseThrow(() -> new ResourceNotFoundException(
                  "customer with id [%s] not found".formatted(id)
         ));
+    }
+
+    public void addCustomer(CustomerRegistrationRequest customerRegistrationRequest){
+        //check if email exists
+        String email = customerRegistrationRequest.email();
+        if(customerDao.existsPersonWithEmail(email)){
+            throw new DuplicateResourceException("email already taken");
+        };
+
+        //add
+
     }
 }
