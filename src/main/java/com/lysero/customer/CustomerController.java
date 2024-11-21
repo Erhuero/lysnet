@@ -32,7 +32,7 @@ public class CustomerController {
          customerService.addCustomer(request);
     }
 
-    @PutMapping
+    @PutMapping("{customerId}")
     public void updateCustomer(
             @PathVariable("customerId") Integer customerId,
             @RequestBody CustomerUpdateRequest updateRequest){
