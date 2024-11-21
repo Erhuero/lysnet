@@ -10,6 +10,11 @@ import java.util.Optional;
 public class CustomerListDataAccessService implements CustomerDao {
 
     private static List<Customer> customers;
+    private final CustomerRepository customerRepository;
+
+    public CustomerListDataAccessService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     static {
         customers = new ArrayList<>();
@@ -62,5 +67,10 @@ public class CustomerListDataAccessService implements CustomerDao {
         customers.stream().filter(c -> c.getId().equals(customerId))
                 .findFirst()
                 .ifPresent(customers::remove);
+    }
+
+    @Override
+    public void updateCustomer(Customer update) {
+        customerRepository.saveAll(customers);
     }
 }
