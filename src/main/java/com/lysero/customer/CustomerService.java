@@ -8,27 +8,30 @@ import java.util.List;
 
 @Service
 public class CustomerService {
-//TODO
+    //TODO
     private final CustomerDao customerDao;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(@Qualifier("jpa") CustomerDao customerDao) {
+    public CustomerService(@Qualifier("jpa") CustomerDao customerDao,
+                           CustomerRepository customerRepository) {
         this.customerDao = customerDao;
+        this.customerRepository = customerRepository;
     }
 
-    public List<Customer> getAllCustomers(){
-            return customerDao.selectAllCustomers();
+    public List<Customer> getAllCustomers() {
+        return customerDao.selectAllCustomers();
     }
 
-    public Customer getCustomer(Integer id){
+    public Customer getCustomer(Integer id) {
         return customerDao.selectCustomerById(id).orElseThrow(() -> new ResourceNotFoundException(
-                 "customer with id [%s] not found".formatted(id)
+                "customer with id [%s] not found".formatted(id)
         ));
     }
 
-    public void addCustomer(CustomerRegistrationRequest customerRegistrationRequest){
+    public void addCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         //check if email exists
         String email = customerRegistrationRequest.email();
-        if(customerDao.existsPersonWithEmail(email)){
+        if (customerDao.existsPersonWithEmail(email)) {
             throw new DuplicateResourceException("email already taken");
         }
         //add
@@ -40,12 +43,47 @@ public class CustomerService {
         customerDao.insertCustomer(customer);
     }
 
-    public void deleteCustomerById(Integer customerId){
-        if (!customerDao.existsPersonWithId(customerId)){
+    public void deleteCustomerById(Integer customerId) {
+        if (!customerDao.existsPersonWithId(customerId)) {
             throw new ResourceNotFoundException(
                     "customer with id [%s] not found".formatted(customerId)
             );
         }
-        customerDao. deleteCustomerById(customerId);
+        customerDao.deleteCustomerById(customerId);
     }
+
+    public void updateCustomer(Integer customerId, CustomerUpdateRequest updateRequest) {
+
+        Customer customer = getCustomer(customerId);
+
+        boolean changes = false;
+
+        if (updateRequest.name() != null && !updateRequest.name().equals(customer.getName())) {
+            customer.setName(updateRequest.name());
+            customerDao.insertCustomer(customer);
+            changes = true;
+        }
+
+        if (updateRequest.name() != null && !updateRequest.age().equals(customer.getAge())) {
+            customer.setAge(updateRequest.age());
+            changes = true;
+        }
+
+        if (updateRequest.email() != null && !updateRequest.email().equals(customer.getEmail())) {
+            if (customerDao.existsPersonWithEmail(updateRequest.email())) {
+                throw new DuplicateResourceException(
+                        "email already taken"
+                );
+            }
+            customer.setEmail(updateRequest.email());
+            changes = true;
+        }
+
+        if(!changes){
+            throw new RequestValidationException("no data changes found");
+        }
+
+        customerDao.updateCustomer(customer);
+    }
+
 }

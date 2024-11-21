@@ -1,5 +1,6 @@
 package com.lysero.customer;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,14 @@ public class CustomerController {
             @RequestBody CustomerRegistrationRequest request){
          customerService.addCustomer(request);
     }
+
+    @PutMapping
+    public void updateCustomer(
+            @PathVariable("customerId") Integer customerId,
+            @RequestBody CustomerUpdateRequest updateRequest){
+        customerService.updateCustomer(customerId, updateRequest);
+    }
+
     @DeleteMapping("{customerId}")
     public void deleteCustomer(
             @PathVariable("customerId") Integer customerId){
