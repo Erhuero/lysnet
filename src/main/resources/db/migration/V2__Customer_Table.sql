@@ -1,3 +1,5 @@
-CREATE TABLE customer.(
-
-)
+CREATE TABLE customer(
+    id BIGINT,
+    name TEXT,
+    age INT
+);
