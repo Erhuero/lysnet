@@ -1,5 +1,7 @@
 package com.lysero;
 
+import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
 import com.lysero.customer.Customer;
 import com.lysero.customer.CustomerRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -9,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 public class Main {
@@ -22,22 +25,18 @@ public class Main {
 
         return args -> {
 
-            Customer alex = new Customer(
-                    "Alex",
-                    "topg@tate.com",
-                    21
+            var faker = new Faker();
+            Random random = new Random();
+            Name name = faker.name();
+            String firstName = name.firstName();
+            String lastName = name.lastName();
+            Customer customer = new Customer(
+                    firstName + " " + lastName,
+                    firstName.toLowerCase() + "." + lastName.toLowerCase() + "@gmail.com",
+                    random.nextInt(18, 87)
             );
-
-            Customer bang = new Customer(
-                    "bang",
-                    "bang@tate.com",
-                    22
-            );
-
-            List<Customer> customers = List.of(alex, bang);
-            //customerRepository.saveAll(customers);
+            customerRepository.save(customer);
 
         };
     }
-
 }
