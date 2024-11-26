@@ -19,13 +19,14 @@ public class Customer {
     @Id
     @SequenceGenerator(
             name= "customer_id_seq",
-            sequenceName = "customer_id_sequence"
+            sequenceName = "customer_id_seq",
+            allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "customer_id_seq"
     )
-    private Integer id;
+    private Long id;
     @Column(nullable = false)
     private String name;
     @Column(
@@ -39,7 +40,7 @@ public class Customer {
 
     }
 
-    public Customer(Integer id, String name, String email, Integer age) {
+    public Customer(Long id, String name, String email, Integer age) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -53,11 +54,11 @@ public class Customer {
     }
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
