@@ -30,7 +30,16 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
 
     @Override
     public Optional<Customer> selectCustomerById(Integer id) {
-        return Optional.empty();
+        var sql = """
+                SELECT id, name, email, age 
+                FROM customer 
+                WHERE id = ?
+                """;
+        return jdbcTemplate
+                .query(sql, customerRowMapper, id)
+                .stream()
+                .findFirst();
+
     }
 
     @Override
@@ -51,7 +60,17 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
 
     @Override
     public boolean existsPersonWithEmail(String email) {
-        return false;
+        var sql = """
+                INSERT INTO customer(name, email, age)
+                VALUES (?, ?, ?)
+                """;
+
+        return jdbcTemplate(
+                sql,
+                customer.getName(),
+                customer.getEmail(),
+                customer.getAge()
+        );
     }
 
     @Override
