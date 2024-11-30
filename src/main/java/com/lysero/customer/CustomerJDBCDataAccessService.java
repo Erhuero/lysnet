@@ -1,7 +1,6 @@
 package com.lysero.customer;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,8 +11,10 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CustomerJDBCDataAccessService(JdbcTemplate jdbcTemplate) {
+    private final CustomerRowMapper customerRowMapper;
+    public CustomerJDBCDataAccessService(JdbcTemplate jdbcTemplate, CustomerRowMapper customerRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.customerRowMapper = customerRowMapper;
     }
 
     @Override
@@ -22,18 +23,9 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
                 SELECT id, name, email, age 
                 FROM customer
                 """;
-        RowMapper<Customer> customerRowMapper = (rs, rowNum) -> {
-            Customer customer = new Customer(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getInt("age")
-            );
-            return customer;
-        };
 
-        List<Customer> customers = jdbcTemplate.query(sql, customerRowMapper);
-        return customers;
+        return jdbcTemplate.query(sql, customerRowMapper);
+
     }
 
     @Override
