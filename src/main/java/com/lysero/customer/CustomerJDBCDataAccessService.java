@@ -61,16 +61,13 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
     @Override
     public boolean existsPersonWithEmail(String email) {
         var sql = """
-                INSERT INTO customer(name, email, age)
-                VALUES (?, ?, ?)
+                SELECT count(id)
+                FROM customer 
+                WHERE email = ?
                 """;
 
-        return jdbcTemplate(
-                sql,
-                customer.getName(),
-                customer.getEmail(),
-                customer.getAge()
-        );
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+        return  count != null && count > 0;
     }
 
     @Override
