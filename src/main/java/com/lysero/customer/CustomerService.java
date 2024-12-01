@@ -60,11 +60,10 @@ public class CustomerService {
 
         if (updateRequest.name() != null && !updateRequest.name().equals(customer.getName())) {
             customer.setName(updateRequest.name());
-            customerDao.insertCustomer(customer);
             changes = true;
         }
 
-        if (updateRequest.name() != null && !updateRequest.age().equals(customer.getAge())) {
+        if (updateRequest.age() != null && !updateRequest.age().equals(customer.getAge())) {
             customer.setAge(updateRequest.age());
             changes = true;
         }
