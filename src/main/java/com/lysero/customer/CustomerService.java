@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public class CustomerService {
-    //TODO
+
     private final CustomerDao customerDao;
     private final CustomerRepository customerRepository;
 
