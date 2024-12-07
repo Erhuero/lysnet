@@ -1,24 +1,37 @@
 package com.lysero;
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Testcontainers
 public class TestcontainersTest {
 
     @Container
-    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("lysero-dao-unit-test")
-            .withUsername("lysero")
-            .withPassword("password");
+    private static final PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:latest")
+                .withDatabaseName("lysero-dao-unit-test")
+                .withUsername("lysero")
+                .withPassword("password");
 
     @Test
     void canStartPostgresDB() {
-        //Given
-        //When
+        assertThat(postgreSQLContainer.isRunning()).isTrue();
+        assertThat(postgreSQLContainer.isCreated()).isTrue();
+    }
 
-        //Then
+    @Test
+    void canApplyDbMigrationsWithFlyway() {
+        Flyway flyway = Flyway.configure().dataSource(
+                postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword()
+        ).load();
+        flyway.migrate();
+        System.out.println();
     }
 }
