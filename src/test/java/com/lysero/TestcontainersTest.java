@@ -16,9 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 public class TestcontainersTest {
 
-    @Autowired
-    private ApplicationContext applicationContext;
-
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:latest")
@@ -55,11 +52,6 @@ public class TestcontainersTest {
                 postgreSQLContainer.getUsername(),
                 postgreSQLContainer.getPassword()
         ).load();
-        //flyway.migrate();
-        System.out.println(applicationContext.getBeanDefinitionCount());
-        for(String name : applicationContext.getBeanDefinitionNames()){
-            System.out.println(name);
-        }
-        System.out.println();
+        flyway.migrate();
     }
 }
